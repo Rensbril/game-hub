@@ -52,7 +52,7 @@ const NavBar = ({ onsearch }: Props) => {
     }
   };
 
-  const handleSignup = async (email: string, password: string) => {
+  const handleSignup = async () => {
     setShowSignupModal(false);
     toast({
       title: "Rens was lazy and didn't implement this YET!!!!",

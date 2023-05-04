@@ -7,7 +7,6 @@ import {
   Button,
   useToast,
   Spinner,
-  Alert,
 } from "@chakra-ui/react";
 
 type LoginFormProps = {
