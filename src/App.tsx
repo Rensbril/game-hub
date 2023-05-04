@@ -2,12 +2,14 @@ import { Box, Flex, Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import GameGrid from "./components/GameGrid";
 import GenreList from "./components/GenreList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Genre } from "./hooks/useGenres";
 import PlatformSelector from "./components/PlatformSelector";
 import { Platform } from "./hooks/useGames";
 import SortSelector from "./components/SortSelector";
 import GameHeading from "./components/GameHeading";
+import { Session } from "@supabase/supabase-js";
+import supabase from "./components/supabaseClient";
 
 export interface GameQuery {
   genre: Genre | null;
@@ -18,6 +20,18 @@ export interface GameQuery {
 
 function App() {
   const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+    return () => {
+      authListener?.subscription.unsubscribe;
+    };
+  }, [session]);
 
   return (
     <Grid
@@ -33,6 +47,7 @@ function App() {
       <GridItem area="nav">
         <NavBar
           onsearch={(searchText) => setGameQuery({ ...gameQuery, searchText })}
+          session={session}
         />
       </GridItem>
       <Show above="lg">
